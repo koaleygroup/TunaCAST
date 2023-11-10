@@ -33,6 +33,8 @@ qt_add_qml_module(appTunaCastApp
     SOURCES src/cpp/qmlinterface.h src/cpp/qmlinterface.cpp
     QML_FILES src/qml/controls/AvailableScreensDelegate.qml
     QML_FILES src/qml/controls/AvailableWindowsDelegate.qml
+    QML_FILES src/qml/controls/SideBar.qml
+    QML_FILES src/qml/controls/LoadingWidget.qml
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
