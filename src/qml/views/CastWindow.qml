@@ -1,6 +1,10 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
+import QtMultimedia
+import com.koaleygroup.media
+
+import "../controls"
 
 Item {
     id: root
@@ -11,7 +15,7 @@ Item {
         id: tabs
         anchors.top: parent.top
         width: parent.width
-        height: 40
+        height: 50
 
         Row {
             anchors.verticalCenter: parent.verticalCenter
@@ -73,19 +77,59 @@ Item {
         anchors.bottom: parent.bottom
         anchors.left: parent.left
         anchors.right: parent.right
-        anchors.rightMargin: 10
-        anchors.bottomMargin: 10
         color: '#ddd'
 
-        StackLayout {
-            anchors.fill: parent
+        Rectangle {
+            anchors.top: parent.top
+            anchors.bottom: bottomBar.top
+            anchors.left: parent.left
+            anchors.right: parent.right
+            anchors.margins: 10
+            color: '#444'
+            radius: 8
 
-            Item {
-                id: homeTab
+            FrameProvider {
+                id: frameProvider
+                videoSink: videoOutput.videoSink
             }
 
-            Item {
-                id: discoverTab
+            VideoOutput {
+                id: videoOutput
+                anchors.fill: parent
+                anchors.margins: 8
+                fillMode: VideoOutput.PreserveAspectFit
+
+                Component.onCompleted: frameProvider.start()
+            }
+        }
+
+        Item {
+            id: bottomBar
+            height: 40
+            width: parent.width - 20
+            anchors.bottom: parent.bottom
+            anchors.bottomMargin: 5
+            anchors.right: parent.right
+            anchors.rightMargin: 10
+
+            Row {
+                spacing: 10
+                anchors.verticalCenter: parent.verticalCenter
+                anchors.right: parent.right
+
+                CastButton {
+                    id: stopCastBtn
+                    backgroundColor: 'red'
+                    height: 40
+                    text: qsTr('Stop Cast')
+                    anchors.verticalCenter: parent.verticalCenter
+                }
+
+                CastButton {
+                    id: startCastBtn
+                    height: 40
+                    anchors.verticalCenter: parent.verticalCenter
+                }
             }
         }
     }

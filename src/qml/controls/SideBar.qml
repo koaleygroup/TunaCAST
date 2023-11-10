@@ -1,7 +1,6 @@
 import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls
-import com.koaleygroup.models
 
 Item {
     id: devicesWidget
@@ -9,6 +8,14 @@ Item {
     anchors.bottom: parent.bottom
     anchors.left: parent.left
     width: 200
+
+    Connections {
+        target: QmlInterface
+
+        function onSourceTypeChanged() {
+            console.log(QmlInterface.sourceType)
+        }
+    }
 
     Item {
         id: devicesBar
@@ -26,6 +33,7 @@ Item {
             anchors.right: refreshBtn.left
             anchors.rightMargin: 10
             anchors.verticalCenter: parent.verticalCenter
+            onCurrentIndexChanged: QmlInterface.sourceType = currentIndex
         }
 
         Rectangle {
@@ -53,7 +61,7 @@ Item {
         anchors.bottom: parent.bottom
         anchors.left: parent.left
         anchors.right: parent.right
-        currentIndex: cb.currentIndex
+        currentIndex: QmlInterface.sourceType
         anchors.leftMargin: 10
         anchors.topMargin: 10
         anchors.bottomMargin: 10
@@ -61,7 +69,7 @@ Item {
         ListView {
             id: devicesLv
             clip: true
-            model: ScreenListModel{}
+            model: QmlInterface.getScreenListModel()
             spacing: 4
             width: parent.width
             delegate: AvailableScreensDelegate {
@@ -69,16 +77,18 @@ Item {
                 name: model.label ? model.label : 'Screen ' + (index+1).toString()
                 dims: `${model.width} x ${model.height}`
                 dpi: model.dpi
-                selected: selectedScreenIndex===index
+                selected: model.currentSelectedIndex===index
 
-                onClicked: selectedScreenIndex=index
+                onClicked: model.currentSelectedIndex=index
+
+                Component.onCompleted: console.log('-- ', model.currentSelectedIndex)
             }
         }
 
         ListView {
             id: windowsLv
             clip: true
-            model: WindowListModel{}
+            model: QmlInterface.getWindowListModel()
             spacing: 4
             width: parent.width
             delegate: AvailableWindowsDelegate {

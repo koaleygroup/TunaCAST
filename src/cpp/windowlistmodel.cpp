@@ -27,9 +27,9 @@ QVariant WindowListModel::data(const QModelIndex &index, int role) const
     return {};
 }
 
-QCapturableWindow WindowListModel::window(const QModelIndex &index) const
+QCapturableWindow WindowListModel::window(const int &row) const
 {
-    return windowList.at(index.row());
+    return windowList.at(row);
 }
 
 void WindowListModel::populate()

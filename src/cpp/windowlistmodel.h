@@ -19,7 +19,7 @@ public:
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
 
-    QCapturableWindow window(const QModelIndex &index) const;
+    QCapturableWindow window(const int &row) const;
 
 public Q_SLOTS:
     void populate();

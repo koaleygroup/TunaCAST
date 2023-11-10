@@ -5,7 +5,7 @@ Item {
     id: root
 
     Timer {
-        interval: 2500
+        interval: 500
         running: true
         onTriggered: {
             bw.isRunning = false

@@ -17,13 +17,11 @@ Item {
         id: sideBar
     }
 
-    StackView {
-        id: castStack
+    CastWindow{
         anchors.left: sideBar.right
         anchors.right: parent.right
         anchors.top: parent.top
         anchors.bottom: parent.bottom
         anchors.leftMargin: 10
-        initialItem: CastWindow{}
     }
 }

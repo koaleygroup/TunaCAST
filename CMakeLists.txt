@@ -4,18 +4,20 @@ project(TunaCastApp VERSION 0.1 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-find_package(Qt6 6.6 REQUIRED COMPONENTS Quick Gui Multimedia MultimediaWidgets Widgets)
+find_package(Qt6 6.6 REQUIRED COMPONENTS Quick Gui Multimedia MultimediaWidgets Widgets QuickControls2)
 
 qt_standard_project_setup()
 
 qt_add_executable(appTunaCastApp
     src/cpp/main.cpp
-    src/cpp/screencapturepreview.cpp
-    src/cpp/screencapturepreview.h
+    src/cpp/videoframeprovider.cpp
+    src/cpp/videoframeprovider.h
     src/cpp/screenlistmodel.h
     src/cpp/screenlistmodel.cpp
     src/cpp/windowlistmodel.h
     src/cpp/windowlistmodel.cpp
+    src/cpp/qmlinterface.h
+    src/cpp/qmlinterface.cpp
 )
 
 qt_add_qml_module(appTunaCastApp
@@ -29,18 +31,18 @@ qt_add_qml_module(appTunaCastApp
         src/qml/views/CastWindow.qml
         src/qml/views/AvailableDevices.qml
         src/qml/views/Splash.qml
-    QML_FILES src/qml/controls/BusyWidget.qml
-    SOURCES src/cpp/qmlinterface.h src/cpp/qmlinterface.cpp
-    QML_FILES src/qml/controls/AvailableScreensDelegate.qml
-    QML_FILES src/qml/controls/AvailableWindowsDelegate.qml
-    QML_FILES src/qml/controls/SideBar.qml
-    QML_FILES src/qml/controls/LoadingWidget.qml
-    QML_FILES src/qml/controls/IconLabel.qml
-    RESOURCES src/assets/fonts/MaterialIcons-Regular.ttf
-    QML_FILES src/qml/Icon.js
-    RESOURCES src/assets/fonts/materialdesignicons-webfont.ttf
-    QML_FILES src/qml/controls/ImageIcon.qml
-    RESOURCES src/assets/svg/reload.svg src/assets/svg/screen.svg src/assets/svg/window.svg
+        src/qml/controls/AvailableScreensDelegate.qml
+        src/qml/controls/AvailableWindowsDelegate.qml
+        src/qml/controls/SideBar.qml
+        src/qml/controls/LoadingWidget.qml
+        src/qml/controls/IconLabel.qml
+        src/qml/controls/ImageIcon.qml
+        src/qml/controls/BusyWidget.qml
+    RESOURCES
+        src/assets/fonts/MaterialIcons-Regular.ttf
+        src/assets/fonts/materialdesignicons-webfont.ttf
+        src/assets/svg/reload.svg src/assets/svg/screen.svg src/assets/svg/window.svg
+        QML_FILES src/qml/controls/CastButton.qml
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
@@ -55,7 +57,7 @@ set_target_properties(appTunaCastApp PROPERTIES
 )
 
 target_link_libraries(appTunaCastApp
-    PRIVATE Qt6::Quick Qt6::Gui Qt6::Multimedia Qt6::Widgets Qt6::MultimediaWidgets
+    PRIVATE Qt6::Quick Qt6::Gui Qt6::Multimedia Qt6::Widgets Qt6::MultimediaWidgets Qt6::QuickControls2
 )
 
 include(GNUInstallDirs)
