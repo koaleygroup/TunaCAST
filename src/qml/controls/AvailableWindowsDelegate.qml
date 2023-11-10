@@ -25,12 +25,19 @@ Rectangle {
             width: parent.width
             implicitHeight: 50
 
-            Rectangle {
+            Item {
                 id: rc
                 height: 48; width: 48
-                color: 'darkgrey'
                 anchors.left: parent.left
                 anchors.verticalCenter: parent.verticalCenter
+
+                ImageIcon {
+                    height: 48
+                    width: 48
+                    source: "qrc:/TunaCastApp/src/assets/svg/window.svg"
+                    anchors.centerIn: parent
+                    color: selected ? '#eee' : 'darkgrey'
+                }
             }
 
             Text {
