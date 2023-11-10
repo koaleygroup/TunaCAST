@@ -9,30 +9,21 @@ Item {
     id: root
 
     property bool searchingClients: !true
+    property real selectedScreenIndex: -1
+    property real selectedWindowIndex: -1
 
-    Rectangle {
-        id: topBar
-        anchors.top: parent.top
-        height: 50
-        width: parent.width
-        color: blueColor
+
+    SideBar {
+        id: sideBar
     }
 
-    Item {
-        anchors.top: topBar.bottom
+    StackView {
+        id: castStack
+        anchors.left: sideBar.right
+        anchors.right: parent.right
+        anchors.top: parent.top
         anchors.bottom: parent.bottom
-        width: parent.width
-
-        SideBar {}
-
-        StackView {
-            id: castStack
-            anchors.left: devicesWidget.right
-            anchors.right: parent.right
-            anchors.top: parent.top
-            anchors.bottom: parent.bottom
-            anchors.leftMargin: 10
-            initialItem: CastWindow{}
-        }
+        anchors.leftMargin: 10
+        initialItem: CastWindow{}
     }
 }

@@ -1,56 +1,55 @@
 import QtQuick
 
-Item {
+Rectangle {
     id: root
-    width: 200
     implicitHeight: 100
-    height: container.height
+    implicitWidth: 200
+    height: contentCol.height + 20
+    color: selected ? blueColor : 'lightgrey'
 
     property string name
-    property string dims
-    property real dpi
+    property bool selected: false
 
-    Rectangle {
-        id: container
-        width: 180
-        height: contentCol.height + 20
-        color: 'lightgrey'
-        radius: 8
-        anchors.centerIn: parent
+    signal clicked
 
-        Column {
-            id: contentCol
-            spacing: 5
-            anchors.centerIn: parent
+    Column {
+        id: contentCol
+        spacing: 5
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.verticalCenter: parent.verticalCenter
+        anchors.leftMargin: 10
+        anchors.rightMargin: 10
+
+        Item {
+            width: parent.width
+            implicitHeight: 50
+
+            Rectangle {
+                id: rc
+                height: 48; width: 48
+                color: 'darkgrey'
+                anchors.left: parent.left
+                anchors.verticalCenter: parent.verticalCenter
+            }
 
             Text {
-                font.bold: true
-                font.pixelSize: 12
-                width: 170; elide: Text.ElideRight
+                color: selected ? '#eee' : '#444'
                 text: root.name
-                anchors.horizontalCenter: parent.horizontalCenter
-            }
-
-            Item {
-                width: 170
-                implicitHeight: 20
-
-                Text {
-                    font.pixelSize: 10
-                    text: root.dims
-                    anchors.left: parent.left
-                    anchors.verticalCenter: parent.verticalCenter
-                }
-
-                Text {
-                    text: root.dpi + ' dpi'
-                    font.pixelSize: 10
-                    font.italic: true
-                    anchors.right: parent.right
-                    anchors.rightMargin: 10
-                    anchors.verticalCenter: parent.verticalCenter
-                }
+                font.pixelSize: 10
+                font.bold: selected
+                anchors.left: rc.right
+                anchors.right: parent.right
+                anchors.rightMargin: 10
+                anchors.leftMargin: 10
+                anchors.verticalCenter: parent.verticalCenter
+                wrapMode: Text.WordWrap
             }
         }
+    }
+
+    MouseArea {
+        anchors.fill: parent
+        onClicked: root.clicked()
     }
 }

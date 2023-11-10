@@ -2,8 +2,8 @@ import QtQuick 2.15
 
 Rectangle {
     id: root
-    width: 200
     implicitHeight: 100
+    implicitWidth: 200
     height: contentCol.height + 20
     color: selected ? blueColor : 'lightgrey'
 
@@ -17,21 +17,27 @@ Rectangle {
     Column {
         id: contentCol
         spacing: 5
-        anchors.centerIn: parent
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.verticalCenter: parent.verticalCenter
+        anchors.leftMargin: 10
+        anchors.rightMargin: 10
 
         Text {
             font.bold: true
             font.pixelSize: 12
-            width: 170; elide: Text.ElideRight
+            width: contentCol.width
+            elide: Text.ElideRight
             text: root.name
-            anchors.horizontalCenter: parent.horizontalCenter
+            color: selected ? '#fff' : '#444'
         }
 
         Item {
-            width: 170
+            width: contentCol.width
             implicitHeight: 20
 
             Text {
+                color: selected ? '#fff' : '#444'
                 font.pixelSize: 10
                 text: root.dims
                 anchors.left: parent.left
@@ -39,11 +45,11 @@ Rectangle {
             }
 
             Text {
+                color: selected ? '#fff' : '#444'
                 text: root.dpi + ' dpi'
                 font.pixelSize: 10
                 font.italic: true
                 anchors.right: parent.right
-                anchors.rightMargin: 10
                 anchors.verticalCenter: parent.verticalCenter
             }
         }

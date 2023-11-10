@@ -53,20 +53,25 @@ Item {
         anchors.bottom: parent.bottom
         anchors.left: parent.left
         anchors.right: parent.right
-        anchors.margins: 10
         currentIndex: cb.currentIndex
+        anchors.leftMargin: 10
+        anchors.topMargin: 10
+        anchors.bottomMargin: 10
 
         ListView {
             id: devicesLv
             clip: true
             model: ScreenListModel{}
-            spacing: 10
+            spacing: 4
+            width: parent.width
             delegate: AvailableScreensDelegate {
+                width: devicesLv.width
                 name: model.label ? model.label : 'Screen ' + (index+1).toString()
                 dims: `${model.width} x ${model.height}`
                 dpi: model.dpi
+                selected: selectedScreenIndex===index
 
-                onClicked: selected = !selected
+                onClicked: selectedScreenIndex=index
             }
         }
 
@@ -74,11 +79,14 @@ Item {
             id: windowsLv
             clip: true
             model: WindowListModel{}
-            spacing: 10
+            spacing: 4
+            width: parent.width
             delegate: AvailableWindowsDelegate {
-                name: model.label ? model.label : 'Screen ' + (index+1).toString()
-                dims: `${model.width} x ${model.height}`
-                dpi: model.dpi
+                width: devicesLv.width
+                name: model.display
+                selected: selectedWindowIndex===index
+
+                onClicked: selectedWindowIndex=index
             }
         }
     }
