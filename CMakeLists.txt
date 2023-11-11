@@ -4,7 +4,11 @@ project(TunaCastApp VERSION 0.1 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-find_package(Qt6 6.6 REQUIRED COMPONENTS Quick Gui Multimedia MultimediaWidgets Widgets QuickControls2)
+find_package(Qt6 6.6 REQUIRED COMPONENTS
+    Quick Gui Multimedia
+    MultimediaWidgets Widgets
+    QuickControls2 WebSockets
+)
 
 qt_standard_project_setup()
 
@@ -16,7 +20,6 @@ qt_add_executable(appTunaCastApp
     src/cpp/windowlistmodel.cpp
     src/cpp/qmlinterface.h
     src/cpp/qmlinterface.cpp
-    src/cpp/videocaptureprovider.h
     src/cpp/videocaptureprovider.cpp
 )
 
@@ -26,6 +29,13 @@ qt_add_qml_module(appTunaCastApp
     RESOURCES
         src/assets/logo.jpg
         src/assets/busy.gif
+        src/assets/fonts/MaterialIcons-Regular.ttf
+        src/assets/fonts/materialdesignicons-webfont.ttf
+        src/assets/svg/reload.svg
+        src/assets/svg/screen.svg
+        src/assets/svg/window.svg
+        src/assets/img/p1.jpg
+        src/assets/img/p2.jpg
     QML_FILES
         src/qml/Main.qml
         src/qml/views/CastWindow.qml
@@ -38,11 +48,8 @@ qt_add_qml_module(appTunaCastApp
         src/qml/controls/IconLabel.qml
         src/qml/controls/ImageIcon.qml
         src/qml/controls/BusyWidget.qml
-    RESOURCES
-        src/assets/fonts/MaterialIcons-Regular.ttf
-        src/assets/fonts/materialdesignicons-webfont.ttf
-        src/assets/svg/reload.svg src/assets/svg/screen.svg src/assets/svg/window.svg
-        QML_FILES src/qml/controls/CastButton.qml
+        src/qml/controls/CastButton.qml
+        SOURCES src/cpp/serverinterface.h src/cpp/serverinterface.cpp
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
@@ -57,7 +64,9 @@ set_target_properties(appTunaCastApp PROPERTIES
 )
 
 target_link_libraries(appTunaCastApp
-    PRIVATE Qt6::Quick Qt6::Gui Qt6::Multimedia Qt6::Widgets Qt6::MultimediaWidgets Qt6::QuickControls2
+    PRIVATE Qt6::Quick Qt6::Gui
+    Qt6::Multimedia Qt6::Widgets Qt6::MultimediaWidgets
+    Qt6::QuickControls2 Qt6::WebSockets
 )
 
 include(GNUInstallDirs)

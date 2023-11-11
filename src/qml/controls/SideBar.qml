@@ -9,14 +9,6 @@ Item {
     anchors.left: parent.left
     width: 200
 
-    Connections {
-        target: QmlInterface
-
-        function onSourceTypeChanged() {
-            console.log(QmlInterface.sourceType)
-        }
-    }
-
     Item {
         id: devicesBar
         height: 50
@@ -30,25 +22,12 @@ Item {
             leftPadding: 10
             anchors.leftMargin: 10
             anchors.left: parent.left
-            anchors.right: refreshBtn.left
-            anchors.rightMargin: 10
-            anchors.verticalCenter: parent.verticalCenter
-            onCurrentIndexChanged: QmlInterface.sourceType = currentIndex
-        }
-
-        Rectangle {
-            id: refreshBtn
-            width: 24
-            height: 24
-            border.color: blueColor
-            border.width: 1
-            radius: 8
             anchors.right: parent.right
             anchors.verticalCenter: parent.verticalCenter
         }
 
         Rectangle {
-            width: parent.width - 10; height: 2
+            width: parent.width - 10; height: 1
             anchors.bottom: parent.bottom
             anchors.right: parent.right
             color: 'lightgrey'
@@ -61,7 +40,7 @@ Item {
         anchors.bottom: parent.bottom
         anchors.left: parent.left
         anchors.right: parent.right
-        currentIndex: QmlInterface.sourceType
+        currentIndex: cb.currentIndex
         anchors.leftMargin: 10
         anchors.topMargin: 10
         anchors.bottomMargin: 10
@@ -77,11 +56,9 @@ Item {
                 name: model.label ? model.label : 'Screen ' + (index+1).toString()
                 dims: `${model.width} x ${model.height}`
                 dpi: model.dpi
-                selected: model.currentSelectedIndex===index
+                selected: selectedScreenIndex===index
 
-                onClicked: model.currentSelectedIndex=index
-
-                Component.onCompleted: console.log('-- ', model.currentSelectedIndex)
+                onClicked: selectedScreenIndex=index
             }
         }
 

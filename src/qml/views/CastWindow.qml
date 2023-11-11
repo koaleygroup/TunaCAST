@@ -79,24 +79,25 @@ Item {
         anchors.right: parent.right
         color: '#ddd'
 
-        Rectangle {
+        Item {
             anchors.top: parent.top
             anchors.bottom: bottomBar.top
             anchors.left: parent.left
             anchors.right: parent.right
             anchors.margins: 10
-            color: '#444'
-            radius: 8
 
             VideoCaptureProvider {
                 id: frameProvider
                 videoSink: videoOutput.videoSink
+                castState: QmlInterface.isCapturing ?
+                               QmlInterface.captureSource===0 ?
+                                   VideoCaptureProvider.ScreenMode : VideoCaptureProvider.WindowMode :
+                                   VideoCaptureProvider.StandbyMode
             }
 
             VideoOutput {
                 id: videoOutput
                 anchors.fill: parent
-                anchors.margins: 8
                 fillMode: VideoOutput.PreserveAspectFit
 
                 Component.onCompleted: frameProvider.start()
@@ -119,16 +120,23 @@ Item {
 
                 CastButton {
                     id: stopCastBtn
-                    backgroundColor: 'red'
-                    height: 40
+                    visible: QmlInterface.isCapturing
+                    enabled: QmlInterface.isCapturing
+                    backgroundColor: 'red'; height: 40
                     text: qsTr('Stop Cast')
                     anchors.verticalCenter: parent.verticalCenter
+
+                    onClicked: QmlInterface.stopCapture()
                 }
 
                 CastButton {
                     id: startCastBtn
+                    visible: !QmlInterface.isCapturing
+                    enabled: !QmlInterface.isCapturing
                     height: 40
                     anchors.verticalCenter: parent.verticalCenter
+
+                    onClicked: QmlInterface.startCapture(QmlInterface.sourceType===0 ? selectedScreenIndex : selectedWindowIndex)
                 }
             }
         }

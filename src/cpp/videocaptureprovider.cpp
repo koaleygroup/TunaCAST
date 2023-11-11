@@ -1,16 +1,15 @@
-#include "videocaptureprovider.h"
+#include "qmlinterface.h"
 
 #include <QImage>
 #include <QPainter>
 #include <QSize>
 #include <QVideoFrame>
 
-#include <QRandomGenerator>
-#include <QDateTime>
+#include <QGuiApplication>
 
-VideoCaptureProvider::VideoCaptureProvider(QObject *parent):QObject(parent)
+VideoCaptureProvider::VideoCaptureProvider(QObject *parent):QObject(parent), m_castState(CastState::Clear)
 {
-    m_timer.setInterval(500);
+    m_timer.setInterval(100);
     connect(&m_timer, &QTimer::timeout, this, &VideoCaptureProvider::handleTimeout);
 }
 
@@ -34,33 +33,57 @@ void VideoCaptureProvider::start()
     handleTimeout();
 }
 
+void VideoCaptureProvider::init(QObject *qmlInterface)
+{
+    m_qmlInterface = qobject_cast<QmlInterface *>(qmlInterface);
+    m_qmlInterface->setMediaCaptureOutput(this);
+}
+
+void VideoCaptureProvider::init(int sourceType, QScreen *qscreen)
+{
+    qDebug() << "Before Screen";
+    auto s = QGuiApplication::screens().value(0); // qscreen;
+    qDebug() << "After Screen";
+}
+
 void VideoCaptureProvider::handleTimeout()
 {
     if(!m_videoSink)
         return;
 
-    QVideoFrame video_frame(QVideoFrameFormat(QSize(640, 480),QVideoFrameFormat::Format_BGRA8888));
-
-    if(!video_frame.isValid() || !video_frame.map(QVideoFrame::WriteOnly)){
-        qWarning() << "QVideoFrame is not valid or not writable";
+    switch(m_castState)
+    {
+    case CastState::StandbyMode:
+    {
+        auto standbyImg = QImage(":/TunaCastApp/src/assets/img/p1.jpg");
+        image2VideoFrame(standbyImg);
         return;
     }
-
-    QImage::Format image_format = QVideoFrameFormat::imageFormatFromPixelFormat(video_frame.pixelFormat());
-    if(image_format == QImage::Format_Invalid){
-        qWarning() << "It is not possible to obtain image format from the pixel format of the videoframe";
+    case CastState::ScreenMode:
+    {
+        auto pix = QGuiApplication::screens().value(0)->grabWindow();
+        QImage img = pix.toImage();
+        image2VideoFrame(img);
         return;
     }
+    case CastState::WindowMode:
+    case CastState::CustomMode:
+    case CastState::Clear:
+    default:
+    {
+        QImage image(QSize(1280,720), QImage::Format::Format_RGBA8888);
+        image.fill(QColor(0,0,0));
+        image2VideoFrame(image);
+    }
+    }
+}
 
-    int plane = 0;
-    QImage image(video_frame.bits(plane), video_frame.width(),video_frame.height(), image_format);
-
-    image.fill(QColor::fromRgb(QRandomGenerator::global()->generate()));
-    QPainter painter(&image);
-    painter.drawText(image.rect(), Qt::AlignCenter, QDateTime::currentDateTime().toString());
-    painter.end();
-
-    video_frame.unmap();
-    m_videoSink->setVideoFrame(video_frame);
+inline void VideoCaptureProvider::image2VideoFrame(const QImage &img)
+{
+    QVideoFrame frame(QVideoFrameFormat(img.size(), QVideoFrameFormat::pixelFormatFromImageFormat(img.format())));
+    frame.map(QVideoFrame::ReadWrite);
+    memcpy(frame.bits(0), img.bits(), img.sizeInBytes());
+    frame.unmap();
+    m_videoSink->setVideoFrame(frame);
 }
 

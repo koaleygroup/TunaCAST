@@ -7,7 +7,6 @@ import "../controls"
 Item {
     id: root
 
-    property bool searchingClients: !true
     property real selectedScreenIndex: -1
     property real selectedWindowIndex: -1
 
