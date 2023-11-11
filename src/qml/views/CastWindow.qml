@@ -2,7 +2,7 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 import QtMultimedia
-import com.koaleygroup.media
+import com.koaleygroup.multimedia
 
 import "../controls"
 
@@ -88,7 +88,7 @@ Item {
             color: '#444'
             radius: 8
 
-            FrameProvider {
+            VideoCaptureProvider {
                 id: frameProvider
                 videoSink: videoOutput.videoSink
             }

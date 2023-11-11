@@ -10,14 +10,14 @@ qt_standard_project_setup()
 
 qt_add_executable(appTunaCastApp
     src/cpp/main.cpp
-    src/cpp/videoframeprovider.cpp
-    src/cpp/videoframeprovider.h
     src/cpp/screenlistmodel.h
     src/cpp/screenlistmodel.cpp
     src/cpp/windowlistmodel.h
     src/cpp/windowlistmodel.cpp
     src/cpp/qmlinterface.h
     src/cpp/qmlinterface.cpp
+    src/cpp/videocaptureprovider.h
+    src/cpp/videocaptureprovider.cpp
 )
 
 qt_add_qml_module(appTunaCastApp

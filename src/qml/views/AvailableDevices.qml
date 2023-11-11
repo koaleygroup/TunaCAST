@@ -1,6 +1,5 @@
 import QtQuick
 import QtQuick.Controls
-import com.koaleygroup.models
 import QtQuick.Layouts
 
 import "../controls"
