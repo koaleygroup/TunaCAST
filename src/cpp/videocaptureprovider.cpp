@@ -6,6 +6,7 @@
 #include <QVideoFrame>
 
 #include <QGuiApplication>
+#include <QBuffer>
 
 VideoCaptureProvider::VideoCaptureProvider(QObject *parent):QObject(parent), m_castState(CastState::Clear)
 {
@@ -29,20 +30,29 @@ void VideoCaptureProvider::setVideoSink(QVideoSink *videoSink)
 
 void VideoCaptureProvider::start()
 {
-    m_timer.start();
-    handleTimeout();
+    // m_timer.start();
+    // handleTimeout();
 }
 
 void VideoCaptureProvider::init(QObject *qmlInterface)
 {
+    qDebug() << "Init!";
+
     m_qmlInterface = qobject_cast<QmlInterface *>(qmlInterface);
     m_qmlInterface->setMediaCaptureOutput(this);
+
+    // connect(this, &VideoCaptureProvider::sendFrame, m_qmlInterface, &QmlInterface::onSendFrame);
+    //connect(this, &VideoCaptureProvider::sendFrame, [&](const QImage &img){
+    //    qDebug() << "On transit: " << img.size();
+    //});
+
+    start();
 }
 
 void VideoCaptureProvider::init(int sourceType, QScreen *qscreen)
 {
     qDebug() << "Before Screen";
-    auto s = QGuiApplication::screens().value(0); // qscreen;
+    // auto s = QGuiApplication::screens().value(0); // qscreen;
     qDebug() << "After Screen";
 }
 
@@ -57,6 +67,7 @@ void VideoCaptureProvider::handleTimeout()
     {
         auto standbyImg = QImage(":/TunaCastApp/src/assets/img/p1.jpg");
         image2VideoFrame(standbyImg);
+        emit sendFrame(standbyImg);
         return;
     }
     case CastState::ScreenMode:
@@ -64,6 +75,10 @@ void VideoCaptureProvider::handleTimeout()
         auto pix = QGuiApplication::screens().value(0)->grabWindow();
         QImage img = pix.toImage();
         image2VideoFrame(img);
+        emit sendFrame(img);
+
+        qDebug() << "Snapshot taken: " << img.size() << " bytes";
+
         return;
     }
     case CastState::WindowMode:
@@ -74,6 +89,7 @@ void VideoCaptureProvider::handleTimeout()
         QImage image(QSize(1280,720), QImage::Format::Format_RGBA8888);
         image.fill(QColor(0,0,0));
         image2VideoFrame(image);
+        emit sendFrame(image);
     }
     }
 }

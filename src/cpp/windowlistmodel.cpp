@@ -38,5 +38,3 @@ void WindowListModel::populate()
     windowList = QWindowCapture::capturableWindows();
     endResetModel();
 }
-
-#include "moc_windowlistmodel.cpp"

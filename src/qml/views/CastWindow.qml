@@ -100,7 +100,7 @@ Item {
                 anchors.fill: parent
                 fillMode: VideoOutput.PreserveAspectFit
 
-                Component.onCompleted: frameProvider.start()
+                Component.onCompleted: frameProvider.init(QmlInterface)
             }
         }
 

@@ -1,4 +1,5 @@
 #include "serverinterface.h"
+#include <QImage>
 
 ServerInterface::ServerInterface(QObject *parent) : QObject(parent)
 {
@@ -17,7 +18,7 @@ bool ServerInterface::startListening()
     if(!conn) {
         qDebug() << "Error starting server: " << this->m_server->errorString();
     } else {
-        qDebug() << "Server started!";
+        qDebug() << "Server is listening ...";
     }
 
     return conn;
@@ -42,13 +43,34 @@ void ServerInterface::sendTextMessage(QString message)
     }
 }
 
+void ServerInterface::sendVideoFrame(const QByteArray &data)
+{
+    foreach(QWebSocket * client, m_clients)
+    {
+        if(client->isValid())
+        {
+            client->sendBinaryMessage(data);
+
+            qDebug()<<"Sending data of size: "<<data.size();
+        }
+        else
+        {
+            qDebug() << "Invalid Client to send to!";
+        }
+    }
+}
+
 void ServerInterface::onNewConnection()
 {
     QWebSocket * client = this->m_server->nextPendingConnection();
 
+    qDebug() << "New Connection [" << client->peerAddress() << "]";
+
     connect(client,&QWebSocket::disconnected,this,&ServerInterface::onDisconnected);
 
     m_clients.append(client);
+
+    client->sendTextMessage("INFO");
 }
 
 void ServerInterface::onDisconnected()
@@ -75,4 +97,21 @@ void ServerInterface::setServerOnline(bool newServerOnline)
         return;
     m_serverOnline = newServerOnline;
     emit serverOnlineChanged(newServerOnline);
+}
+
+void ServerInterface::onSendFrame(const QImage &img)
+{
+    qDebug() << "Server: Send Frame: " << img.size();
+
+    // Convert image to QByteArray and send over the WebSocket to all clients
+    // QImage to QByteArray
+    QByteArray arr;
+    QBuffer buffer(&arr);
+    buffer.open(QIODevice::WriteOnly);
+    img.save(&buffer, "PNG");
+
+    // Compress QByteArray
+
+    // Send QByteArray
+    sendVideoFrame(arr);
 }

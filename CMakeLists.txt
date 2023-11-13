@@ -21,6 +21,8 @@ qt_add_executable(appTunaCastApp
     src/cpp/qmlinterface.h
     src/cpp/qmlinterface.cpp
     src/cpp/videocaptureprovider.cpp
+    src/cpp/serverinterface.h src/cpp/serverinterface.cpp
+    src/cpp/videocaptureprovider.h
 )
 
 qt_add_qml_module(appTunaCastApp
@@ -49,7 +51,6 @@ qt_add_qml_module(appTunaCastApp
         src/qml/controls/ImageIcon.qml
         src/qml/controls/BusyWidget.qml
         src/qml/controls/CastButton.qml
-        SOURCES src/cpp/serverinterface.h src/cpp/serverinterface.cpp
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.

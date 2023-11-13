@@ -24,6 +24,8 @@ Item {
             anchors.left: parent.left
             anchors.right: parent.right
             anchors.verticalCenter: parent.verticalCenter
+
+            onCurrentIndexChanged: QmlInterface.sourceType = currentIndex //  = currentIndex===0 ? QmlInterface.Screen : QmlInterface.Window
         }
 
         Rectangle {

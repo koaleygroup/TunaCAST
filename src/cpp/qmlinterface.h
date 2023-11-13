@@ -30,9 +30,9 @@ public:
 
     explicit QmlInterface(QObject *parent = nullptr);
 
-    Q_PROPERTY(SourceType sourceType MEMBER m_sourceType NOTIFY sourceTypeChanged FINAL)
+    Q_PROPERTY(int sourceType MEMBER m_sourceType NOTIFY sourceTypeChanged FINAL)
     Q_PROPERTY(bool isCapturing MEMBER m_isCapturing NOTIFY isCapturingChanged FINAL)
-    Q_PROPERTY(SourceType captureSource MEMBER m_captureSource NOTIFY captureSourceChanged FINAL)
+    // Q_PROPERTY(SourceType captureSource MEMBER m_captureSource NOTIFY captureSourceChanged FINAL)
 
     Q_INVOKABLE ScreenListModel* getScreenListModel();
     Q_INVOKABLE WindowListModel *getWindowListModel();
@@ -54,7 +54,7 @@ private slots:
     void onScreenCaptureErrorOccured(QScreenCapture::Error error, const QString &errorString);
 
 private:
-    SourceType m_sourceType;
+    int m_sourceType;
     ScreenListModel* m_screenListModel;
     WindowListModel* m_windowListModel;
 
@@ -63,7 +63,7 @@ private:
     QMediaCaptureSession *mediaCaptureSession = nullptr;
 
     bool m_isCapturing;
-    SourceType m_captureSource;
+    // SourceType m_captureSource;
     VideoCaptureProvider * m_videoCaptureProvider;
     ServerInterface * m_serverInterface;
     QThread * m_serverThread;
@@ -104,8 +104,11 @@ signals:
 
     void castStateChanged();
 
+    void sendFrame(const QImage &image);
+
 private:
     void image2VideoFrame(const QImage &img);
+    QByteArray qimage2Bytearray(const QImage &img);
 
     QPointer<QVideoSink> m_videoSink;
     void handleTimeout();
